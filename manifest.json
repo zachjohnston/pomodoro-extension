@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "really cool extension",
   "description": "learning how to use extension",
-  "version": "1.0",
+  "version": "69.420",
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": "images/icon.png"
