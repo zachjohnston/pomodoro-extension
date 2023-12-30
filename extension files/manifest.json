@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Hello Extensions",
-  "description": "Base Level Extension",
+  "name": "really cool extension",
+  "description": "learning how to use extension",
   "version": "1.0",
   "action": {
     "default_popup": "hello.html",
