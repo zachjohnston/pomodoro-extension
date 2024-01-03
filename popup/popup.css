@@ -1,0 +1,35 @@
+/* popup.css */
+/* Set the width and height of the popup */
+html, body {
+    width: 300px; /* Adjust the width as needed */
+    height: 200px; /* Adjust the height as needed */
+  }
+  
+  /* Optional: Center the popup on the screen */
+  body {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+}
+
+  p {
+    font-family: 'Papyrus'; /* Change the font family as needed */
+    font-size: 50px; /* Change the font size as needed */
+  }
+
+  button {
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    font-family: 'Papyrus';
+    color: white;
+  }
+  button:hover {
+    background-color: #45a049;
+
+  }

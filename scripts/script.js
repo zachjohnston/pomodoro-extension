@@ -21,7 +21,7 @@ function updateCountdown() {
     if (time < 0) {
         clearInterval(timerInterval);
         alert("Time's up!");
-    }
+    }   
 }
 
 function resetTimer() {
