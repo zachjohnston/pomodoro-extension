@@ -3,9 +3,22 @@ let time = startingMinutes * 60;
 let timerInterval;  // Variable to hold the interval
 
 const countdownEl = document.getElementById('countdown');
-const resetButton = document.getElementById('resetButton');
 
 resetButton.addEventListener('click', resetTimer);
+
+document.addEventListener('DOMContentLoaded', function() {
+    var startButton = document.getElementById('startButton');
+    var resetButton = document.getElementById('resetButton');
+
+    startButton.addEventListener('click', function(){
+        startButton.style.display = 'none';
+        resetButton.style.display = 'block';
+    });
+    resetButton.addEventListener('click', function(){
+        startButton.style.display = 'block';
+        resetButton.style.display = 'none';
+    });
+});
 
 function updateCountdown() {
     const minutes = Math.floor(time / 60);
@@ -18,7 +31,7 @@ function updateCountdown() {
     time--;
 
     // Stop the timer when it reaches 0
-    if (time < 0) {
+    if (time < 0) { 
         clearInterval(timerInterval);
         alert("Time's up!");
     }   
