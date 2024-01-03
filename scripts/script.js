@@ -4,22 +4,7 @@ let timerInterval;  // Variable to hold the interval
 
 const countdownEl = document.getElementById('countdown');
 
-resetButton.addEventListener('click', resetTimer);
-
-document.addEventListener('DOMContentLoaded', function() {
-    var startButton = document.getElementById('startButton');
-    var resetButton = document.getElementById('resetButton');
-
-    startButton.addEventListener('click', function(){
-        startButton.style.display = 'none';
-        resetButton.style.display = 'block';
-    });
-    resetButton.addEventListener('click', function(){
-        startButton.style.display = 'block';
-        resetButton.style.display = 'none';
-    });
-});
-
+//Timer Logic
 function updateCountdown() {
     const minutes = Math.floor(time / 60);
     let seconds = time % 60;
@@ -44,5 +29,31 @@ function resetTimer() {
     timerInterval = setInterval(updateCountdown, 1000);
 }
 
+//Document Logic
+document.addEventListener('DOMContentLoaded', function() {
+    const startButton = document.getElementById('startButton');
+    const resetButton = document.getElementById('resetButton');
+
+    startButton.addEventListener('click', function() {
+        if (!timerInterval) { // Check if timer is already running
+            timerInterval = setInterval(updateCountdown, 1000);
+        }
+        startButton.style.display = 'none';
+        resetButton.style.display = 'block';
+    });
+
+    resetButton.addEventListener('click', function() {
+        resetTimer();
+        startButton.style.display = 'block';
+        resetButton.style.display = 'none';
+    });
+}); 
+
+resetButton.addEventListener('click', resetTimer);
+
+
+
+
+
 // Starting the timer
-timerInterval = setInterval(updateCountdown, 1000);
+
