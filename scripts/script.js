@@ -1,59 +1,57 @@
 const startingMinutes = 25;
 let time = startingMinutes * 60;
-let timerInterval;  // Variable to hold the interval
+let timerInterval = null;
 
 const countdownEl = document.getElementById('countdown');
 
-//Timer Logic
 function updateCountdown() {
     const minutes = Math.floor(time / 60);
     let seconds = time % 60;
-
-    // Adding a leading zero to seconds
     seconds = seconds < 10 ? '0' + seconds : seconds;
-
-    countdownEl.innerHTML = `${minutes}: ${seconds}`;
+    countdownEl.innerHTML = `${minutes}:${seconds}`;
     time--;
 
-    // Stop the timer when it reaches 0
-    if (time < 0) { 
+    if (time < 0) {
         clearInterval(timerInterval);
         alert("Time's up!");
-    }   
+    }
 }
 
 function resetTimer() {
     clearInterval(timerInterval);
+    timerInterval = null;
     time = startingMinutes * 60;
-    updateCountdown(); // To immediately update the display
-    timerInterval = setInterval(updateCountdown, 1000);
+    updateCountdown();
 }
 
-//Document Logic
 document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('startButton');
+    const pauseButton = document.getElementById('pauseButton');
     const resetButton = document.getElementById('resetButton');
 
     startButton.addEventListener('click', function() {
-        if (!timerInterval) { // Check if timer is already running
+        if (!timerInterval) {
             timerInterval = setInterval(updateCountdown, 1000);
         }
         startButton.style.display = 'none';
+        pauseButton.style.display = 'block';
         resetButton.style.display = 'block';
+    });
+
+    pauseButton.addEventListener('click', function() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            pauseButton.textContent = 'Resume Timer';
+        } else {
+            timerInterval = setInterval(updateCountdown, 1000);
+            pauseButton.textContent = 'Pause Timer';
+        }
     });
 
     resetButton.addEventListener('click', function() {
         resetTimer();
+        pauseButton.style.display = 'none';
         startButton.style.display = 'block';
-        resetButton.style.display = 'none';
     });
-}); 
-
-resetButton.addEventListener('click', resetTimer);
-
-
-
-
-
-// Starting the timer
-
+});
