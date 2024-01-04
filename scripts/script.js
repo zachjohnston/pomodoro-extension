@@ -32,13 +32,14 @@ document.addEventListener('DOMContentLoaded', function() {
         startButton.style.display = 'block';
     });
 
-    breakButton.addEventListener('click', function() {
-      pauseButton.style.display = 'block'
-    
+    breakButton.addEventListener('click', function() { 
+      //appears when timer hits 0, starting minutes is 25
+      //pressing the break button calls switchTimer() and starts countdown
+      switchTimer();
+      timerInterval = setInterval(updateCountdown, 1000)
+      pauseButton.style.display = 'block';
+      breakButton.style.display = 'none';
+      resetButton.style.display = 'block';
     });
 
 });
-
-//if timer hits 0, show break button
-
-//break button does 5 min timer instead of 25
