@@ -1,33 +1,10 @@
-const startingMinutes = 25;
-let time = startingMinutes * 60;
-let timerInterval = null;
-
 const countdownEl = document.getElementById('countdown');
-
-function updateCountdown() {
-    const minutes = Math.floor(time / 60);
-    let seconds = time % 60;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-    countdownEl.innerHTML = `${minutes}:${seconds}`;
-    time--;
-
-    if (time < 0) {
-        clearInterval(timerInterval);
-        alert("Time's up!");
-    }
-}
-
-function resetTimer() {
-    clearInterval(timerInterval);
-    timerInterval = null;
-    time = startingMinutes * 60;
-    updateCountdown();
-}
 
 document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('startButton');
     const pauseButton = document.getElementById('pauseButton');
     const resetButton = document.getElementById('resetButton');
+    const breakButton = document.getElementById('breakButton');
 
     startButton.addEventListener('click', function() {
         if (!timerInterval) {
@@ -54,4 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
         pauseButton.style.display = 'none';
         startButton.style.display = 'block';
     });
+
+    breakButton.addEventListener('click', function() {
+      pauseButton.style.display = 'block'
+    
+    });
+
 });
+
+//if timer hits 0, show break button
+
+//break button does 5 min timer instead of 25

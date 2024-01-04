@@ -1,11 +1,10 @@
-/* popup.css */
-/* Set the width and height of the popup */
+
 html, body {
-    width: 300px; /* Adjust the width as needed */
-    height: 200px; /* Adjust the height as needed */
+    width: 300px; 
+    height: 200px; 
   }
   
-  /* Optional: Center the popup on the screen */
+
   body {
     display: flex;
     flex-direction: column; 
@@ -14,10 +13,9 @@ html, body {
 }
 
   p {
-    font-family: 'Papyrus'; /* Change the font family as needed */
-    font-size: 50px; /* Change the font size as needed */
+    font-family: 'Papyrus'; 
+    font-size: 50px; 
   }
-
   button {
     font-size: 20px;
     padding: 10px 20px;
@@ -33,3 +31,4 @@ html, body {
     background-color: #45a049;
 
   }
+  
