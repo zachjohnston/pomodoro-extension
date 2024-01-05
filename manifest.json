@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "really cool extension",
-  "description": "learning how to use extension",
-  "version": "69.420",
+  "name": "Pomodoro Timer",
+  "description": "Study timer that implements the Pomodoro study technique",
+  "version": "0.0",
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": "images/icon.png"
   },
   "background":{
-    "service_worker": "scripts/script.js"
+    "service_worker": "scripts/timer.js"
   }
 }

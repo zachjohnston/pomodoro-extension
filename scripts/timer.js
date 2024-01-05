@@ -7,6 +7,7 @@ function updateCountdown() {
     let seconds = time % 60;
     seconds = seconds < 10 ? '0' + seconds : seconds;
     countdownEl.innerHTML = `${minutes}:${seconds}`;
+    console.log("ticking down")
     time--;
     
     if (time < 0) {
@@ -37,4 +38,32 @@ function playTimerSound() {
 }
 //right here
 
+function switchTimer(){
+    if(startingMinutes == 25){
+        startingMinutes = 5;
+    }
+    else if(startingMinutes == 5){
+        startingMinutes = 25;
+    }
+}
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    switch(message.command) {
+        case "startTimer":
+            //startTimer(message.duration);
+            timerInterval = setInterval(updateCountdown, 1000);
+            break;
+        case "pauseTimer":
+            clearInterval(timerInterval);
+            timerInterval = null;
+            // pauseTimer();
+            break;
+        case "resetTimer":
+            resetTimer();
+            break;
+        case "breakTimer":
+            switchTimer();
+            timerInterval = setInterval(updateCountdown, 1000);
+            break;
+    }
+})
