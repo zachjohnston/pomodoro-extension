@@ -1,4 +1,4 @@
-let startingMinutes = 25;
+let startingMinutes = 1;
 let time = startingMinutes * 60;
 let timerInterval = null;
 
@@ -16,7 +16,7 @@ function updateCountdown() {
         playTimerSound(); 
         alert("Time's up!");
 
-        if (startingMinutes === 25){
+        if (startingMinutes === 1){
             breakButton.style.display = 'block';
             playTimerSound();
         } else if (startingMinutes === 5) {
@@ -39,11 +39,13 @@ function playTimerSound() {
 //right here
 
 function switchTimer(){
-    if(startingMinutes == 25){
+    if(startingMinutes == 1){
         startingMinutes = 5;
+        chrome.runtime.sendMessage({period:"break"})
     }
     else if(startingMinutes == 5){
         startingMinutes = 25;
+        chrome.runtime.sendMessage({period:"work"})
     }
 }
 
