@@ -1,4 +1,5 @@
 const countdownEl = document.getElementById('countdown');
+const audio = new Audio('../audio/timer-sound.mp3');
 let running = false;
 //event that gets the current time
 
@@ -13,17 +14,16 @@ document.addEventListener('DOMContentLoaded', function() {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.timer === "endWork"){
         breakButton.style.display = 'block';
-
+        audio.play();
     }
     else if (message.timer === "endBreak"){
         workButton.style.display = 'block';
-
+        audio.play();
     }       
 });    
     startButton.addEventListener('click', function() {
         console.log("start");
         chrome.runtime.sendMessage({command: "start"}, function(response){
-            console.log(response.status);
             running = true;
         });
 

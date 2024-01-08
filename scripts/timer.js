@@ -2,6 +2,7 @@ let startingMinutes = 1;
 let time = startingMinutes * 60;
 let timerInterval = null;
 
+
 function updateCountdown() {
     const minutes = Math.floor(time / 60);
     let seconds = time % 60;
@@ -9,11 +10,9 @@ function updateCountdown() {
     time--;
     
     chrome.runtime.sendMessage({command:"update", minutes: minutes, seconds: seconds})
-
     if (time < 0) {
         clearInterval(timerInterval);
-        playTimerSound(); 
-        
+    
         if (startingMinutes === 1){
             chrome.runtime.sendMessage({timer:"endWork"});
             breakButton.style.display = 'block';
@@ -58,19 +57,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-
 function resetTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
     time = startingMinutes * 60;
     updateCountdown();
-}
+};
 
-function playTimerSound() {
-    const audio = new Audio('../audio/timer-sound.mp3');
-    audio.play();
-}
-//right here
 
 function switchTimer(){
     if(startingMinutes == 1){
@@ -81,4 +74,4 @@ function switchTimer(){
         startingMinutes = 25;
         chrome.runtime.sendMessage({period:"work"})
     }
-}
+};

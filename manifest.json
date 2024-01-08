@@ -15,5 +15,11 @@
         "matches": ["<all_urls>"],
         "js": ["scripts/script.js"]
     }
-  ]
+  ],
+  "web_accessible_resources": [
+    {
+        "resources": ["audio/timer-sound.mp3"],
+        "matches": ["<all_urls>"]
+    }
+]
 }
