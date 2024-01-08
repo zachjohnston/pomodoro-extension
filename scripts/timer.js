@@ -15,11 +15,9 @@ function updateCountdown() {
     
         if (startingMinutes === 1){
             chrome.runtime.sendMessage({timer:"endWork"});
-            breakButton.style.display = 'block';
-            playTimerSound();
-        } else if (startingMinutes === 5) {
+        } 
+        else if (startingMinutes === 5) {
             chrome.runtime.sendMessage({timer:"endBreak"})
-            workButton.style.display = 'block';
         }
     }
 }
@@ -49,9 +47,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse({status:"Reset Success"});
             resetTimer();
             break;
-        case "break":
+        case "switch":
             sendResponse({status:"Break Success"});
             switchTimer();
+            resetTimer();
             timerInterval = setInterval(updateCountdown, 1000);
             break;
     }
@@ -68,10 +67,10 @@ function resetTimer() {
 function switchTimer(){
     if(startingMinutes == 1){
         startingMinutes = 5;
-        chrome.runtime.sendMessage({period:"break"})
+//        chrome.runtime.sendMessage({period:"break"})
     }
     else if(startingMinutes == 5){
         startingMinutes = 25;
-        chrome.runtime.sendMessage({period:"work"})
+//        chrome.runtime.sendMessage({period:"work"})
     }
 };

@@ -13,26 +13,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.timer === "endWork"){
-        breakButton.style.display = 'block';
         audio.play();
+        switchButton.style.display = 'block';
+        switchButton.textContent = 'Start Break';
     }
     else if (message.timer === "endBreak"){
-        workButton.style.display = 'block';
         audio.play();
+        switchButton.style.display = 'block';
+        switchButton.textContent = 'Start Work';
     }       
 });    
     startButton.addEventListener('click', function() {
         console.log("start");
         chrome.runtime.sendMessage({command: "start"}, function(response){
             running = true;
-        });
-
-        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.command === "update"){
-                const minutes = message.minutes;
-                const seconds = message.seconds;
-                countdownEl.innerHTML = minutes + ":" + seconds;
-            }
         });
 
         startButton.style.display = 'none';
@@ -73,11 +67,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         startButton.style.display = 'block';
     });
 
-    breakButton.addEventListener('click', function() { 
+    switchButton.addEventListener('click', function() { 
       //appears when timer hits 0, starting minutes is 25
       //pressing the break button calls switchTimer() and starts countdown
       console.log("break");
-      chrome.runtime.sendMessage({command: "break"}, function(response){
+      chrome.runtime.sendMessage({command: "switch"}, function(response){
         console.log(response.status);
     });
       pauseButton.style.display = 'block';
@@ -87,4 +81,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // musicToggleButton.addEventlistener('click', function() {
     //     toggleMusic();
     // })
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.command === "update"){
+        const minutes = message.minutes;
+        const seconds = message.seconds;
+        countdownEl.innerHTML = minutes + ":" + seconds;
+    }
 });
