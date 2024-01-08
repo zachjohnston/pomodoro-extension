@@ -1,5 +1,5 @@
 const countdownEl = document.getElementById('countdown');
-
+let running = false;
 //event that gets the current time
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -24,6 +24,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log("start");
         chrome.runtime.sendMessage({command: "start"}, function(response){
             console.log(response.status);
+            running = true;
         });
 
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -40,24 +41,32 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
 
     pauseButton.addEventListener('click', function() {
-        if (timerInterval) {
+        if (running) {
             //clearInterval(timerInterval);
             //timerInterval = null;
+            running = false;
             console.log("pause");
             chrome.runtime.sendMessage({command:"pause"});
+            chrome.runtime.sendMessage({command: "pause"}, function(response){
+                console.log(response.status);
+            });
             pauseButton.textContent = 'Resume Timer';
 
         } else {
             //timerInterval = setInterval(updateCountdown, 1000);
+            running = true;
             console.log("resume")
             chrome.runtime.sendMessage({command:"resume"});
             pauseButton.textContent = 'Pause Timer';
+
         }
     });
 
     resetButton.addEventListener('click', function() {
         console.log("reset");
-        chrome.runtime.sendMessage({command:"reset"});
+        chrome.runtime.sendMessage({command: "reset"}, function(response){
+            console.log(response.status);
+        });
 
         //resetTimer();
         pauseButton.style.display = 'none';
@@ -68,7 +77,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       //appears when timer hits 0, starting minutes is 25
       //pressing the break button calls switchTimer() and starts countdown
       console.log("break");
-      chrome.runtime.sendMessage({command:"break"});
+      chrome.runtime.sendMessage({command: "break"}, function(response){
+        console.log(response.status);
+    });
       pauseButton.style.display = 'block';
       breakButton.style.display = 'none';
       resetButton.style.display = 'block';

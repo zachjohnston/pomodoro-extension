@@ -6,7 +6,6 @@ function updateCountdown() {
     const minutes = Math.floor(time / 60);
     let seconds = time % 60;
     seconds = seconds < 10 ? '0' + seconds : seconds;
-    
     time--;
     
     chrome.runtime.sendMessage({command:"update", minutes: minutes, seconds: seconds})
@@ -31,25 +30,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         case "start":
             //startTimer(message.duration);
             if(!timerInterval){
-                sendResponse({status:"Timer started"})
+                sendResponse({status:"Start Success"})
                 timerInterval = setInterval(updateCountdown, 1000);
             };
             break;
         case "pause":
-            console.log("pause success");
+            sendResponse({status:"Pause Success"})
             clearInterval(timerInterval);
             timerInterval = null;
             // pauseTimer();
             break;
         case "resume":
-            console.log("resume success");
-            timerInterval = setInterval(updateCountdown, 1000);
+            sendResponse({status:"Resume Success"});
+            if(!timerInterval) {
+                timerInterval = setInterval(updateCountdown, 1000);
+            }
+            break;
         case "reset":
-            console.log("reset success");
+            sendResponse({status:"Reset Success"});
             resetTimer();
             break;
         case "break":
-            console.log("break success");
+            sendResponse({status:"Break Success"});
             switchTimer();
             timerInterval = setInterval(updateCountdown, 1000);
             break;
