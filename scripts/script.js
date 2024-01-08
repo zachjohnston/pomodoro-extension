@@ -1,11 +1,6 @@
-//const countdownEl = document.getElementById('countdown');
+const countdownEl = document.getElementById('countdown');
 
-// chrome.runtime.onMessage.addListener(
-//     function(request, sender, sendResponse) {
-//     if (command.start === "start"){
-//         console.log("start success");
-//     }
-//     });
+//event that gets the current time
 
 document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('startButton');
@@ -14,35 +9,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const breakButton = document.getElementById('breakButton');
     // const musicToggleButton = document.getElementById('musicToggleButton');
     
-    startButton.addEventListener('click', function() {
-        if (!timerInterval) {
-            //timerInterval = setInterval(updateCountdown, 1000);
-            console.log("start");
-            //chrome.runtime.sendMessage({command:"start"});
-            (async () => {
-                const response = await chrome.runtime.sendMessage({command: "start"});
-                // do something with response here, not outside the function
-                console.log(response);
-              })();
-           
 
-        }
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.timer === "endWork"){
+        breakButton.style.display = 'block';
+
+    }
+    else if (message.timer === "endBreak"){
+        workButton.style.display = 'block';
+
+    }       
+});    
+    startButton.addEventListener('click', function() {
+        console.log("start");
+        chrome.runtime.sendMessage({command: "start"}, function(response){
+            console.log(response.status);
+        });
+
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.command === "update"){
+                const minutes = message.minutes;
+                const seconds = message.seconds;
+                countdownEl.innerHTML = minutes + ":" + seconds;
+            }
+        });
+
         startButton.style.display = 'none';
         pauseButton.style.display = 'block';
         resetButton.style.display = 'block';
     });
-
-    // chrome.runtime.onMessage.addListener((message, sender, sendMessage) => {
-    //     if(message.timer === "done"){
-    //         if(message.period === "break"){
-                
-    //         }
-    //         else if(message.period === "work"){
-
-    //         }
-    //     }
-//        if(message)
-    //});
 
     pauseButton.addEventListener('click', function() {
         if (timerInterval) {
@@ -72,8 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
     breakButton.addEventListener('click', function() { 
       //appears when timer hits 0, starting minutes is 25
       //pressing the break button calls switchTimer() and starts countdown
-      //switchTimer();
-      //timerInterval = setInterval(updateCountdown, 1000)
       console.log("break");
       chrome.runtime.sendMessage({command:"break"});
       pauseButton.style.display = 'block';
