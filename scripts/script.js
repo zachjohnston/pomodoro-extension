@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const pauseButton = document.getElementById('pauseButton');
     const resetButton = document.getElementById('resetButton');
     const breakButton = document.getElementById('breakButton');
-    // const musicToggleButton = document.getElementById('musicToggleButton');
+    const musicToggleButton = document.getElementById('musicToggleButton');
     
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -68,9 +68,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
 
     switchButton.addEventListener('click', function() { 
-      //appears when timer hits 0, starting minutes is 25
+      //appears when timer hits 0
       //pressing the break button calls switchTimer() and starts countdown
-      console.log("break");
+      console.log("switch");
       chrome.runtime.sendMessage({command: "switch"}, function(response){
         console.log(response.status);
     });
@@ -78,9 +78,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       breakButton.style.display = 'none';
       resetButton.style.display = 'block';
     });
-    // musicToggleButton.addEventlistener('click', function() {
-    //     toggleMusic();
-    // })
+    
+    musicToggleButton.addEventListener('click', function() {
+         chrome.runtime.sendMessage({command:"music"}, function(response){
+            console.log(response.status);
+         });
+    })
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
