@@ -1,8 +1,19 @@
 const countdownEl = document.getElementById('countdown');
-const audio = new Audio('../audio/timer-sound.mp3');
-let running = false;
-//event that gets the current time
+//const audio = new Audio('../audio/timer-sound.mp3');
+var audio = new Audio(chrome.runtime.getURL("../audio/timer-sound.mp3"));
 
+// When popup opens
+chrome.runtime.sendMessage({command: "popupOpened"}, function(response){
+    console.log(response.status);
+});
+// When popup closes
+window.addEventListener('unload', function() {
+    chrome.runtime.sendMessage({command: "popupClosed"}, function(response){
+        console.log(response.status);
+    });
+});
+
+let running = false;
 document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('startButton');
     const pauseButton = document.getElementById('pauseButton');
@@ -11,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const musicToggleButton = document.getElementById('musicToggleButton');
     
 
+//event that listens for end of work or break message
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.timer === "endWork"){
         audio.play();
@@ -24,8 +36,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }       
 });    
     startButton.addEventListener('click', function() {
-        console.log("start");
         chrome.runtime.sendMessage({command: "start"}, function(response){
+            console.log(response.status);
             running = true;
         });
 
@@ -39,8 +51,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             //clearInterval(timerInterval);
             //timerInterval = null;
             running = false;
-            console.log("pause");
-            chrome.runtime.sendMessage({command:"pause"});
             chrome.runtime.sendMessage({command: "pause"}, function(response){
                 console.log(response.status);
             });
@@ -49,8 +59,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         } else {
             //timerInterval = setInterval(updateCountdown, 1000);
             running = true;
-            console.log("resume")
-            chrome.runtime.sendMessage({command:"resume"});
+            chrome.runtime.sendMessage({command:"resume"}, function(response){
+                console.log(response.status);
+            });
             pauseButton.textContent = 'Pause Timer';
 
         }

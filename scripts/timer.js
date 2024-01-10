@@ -1,15 +1,17 @@
 let startingMinutes = 1;
 let time = startingMinutes * 60;
 let timerInterval = null;
-
+let popupstatus = false;
 
 function updateCountdown() {
     const minutes = Math.floor(time / 60);
     let seconds = time % 60;
     seconds = seconds < 10 ? '0' + seconds : seconds;
     time--;
-    
-    chrome.runtime.sendMessage({command:"update", minutes: minutes, seconds: seconds})
+    if(popupstatus){
+        chrome.runtime.sendMessage({command:"update", minutes: minutes, seconds: seconds})
+    }
+
     if (time < 0) {
         clearInterval(timerInterval);
     
@@ -21,7 +23,7 @@ function updateCountdown() {
         }
     }
 }
-
+//command message handler
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch(message.command) {
         case "start":
@@ -56,6 +58,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         case "music":
             sendResponse({status:"Music toggled"});
             // toggleMusic();
+            break;
+        case "popupOpened":
+            popupstatus = true;
+            console.log(popupstatus);
+            sendResponse({status:"Popup Opened"})
+            break;
+        case "popupClosed":
+            popupstatus = false;       
+            console.log(popupstatus); 
+            sendResponse({status:"Popup Closed"})
             break;
     }
 });
