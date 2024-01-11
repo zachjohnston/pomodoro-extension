@@ -8,69 +8,60 @@ function updateCountdown() {
     let seconds = time % 60;
     seconds = seconds < 10 ? '0' + seconds : seconds;
     time--;
-    if(popupstatus){
-        chrome.runtime.sendMessage({command:"update", minutes: minutes, seconds: seconds})
+
+    if (popupstatus) {
+        chrome.runtime.sendMessage({ command: "update", minutes: minutes, seconds: seconds });
     }
 
     if (time < 0) {
         clearInterval(timerInterval);
-    
-        if (startingMinutes === 1){
-            chrome.runtime.sendMessage({timer:"endWork"});
-        } 
-        else if (startingMinutes === 5) {
-            chrome.runtime.sendMessage({timer:"endBreak"})
+        chrome.storage.local.set({ timerRunning: false });
+
+        if (startingMinutes === 1) {
+            chrome.runtime.sendMessage({ timer: "endWork" });
+        } else if (startingMinutes === 5) {
+            chrome.runtime.sendMessage({ timer: "endBreak" });
         }
     }
 }
-//command message handler
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    switch(message.command) {
+    switch (message.command) {
         case "start":
-            //startTimer(message.duration);
-            if(!timerInterval){
-                sendResponse({status:"Start Success"})
+            if (!timerInterval) {
+                sendResponse({ status: "Start Success" });
                 timerInterval = setInterval(updateCountdown, 1000);
-            };
+                chrome.storage.local.set({ timerRunning: true });
+            }
             break;
         case "pause":
-            sendResponse({status:"Pause Success"})
+            sendResponse({ status: "Pause Success" });
             clearInterval(timerInterval);
             timerInterval = null;
-            // pauseTimer();
+            chrome.storage.local.set({ timerRunning: false });
             break;
         case "resume":
-            sendResponse({status:"Resume Success"});
-            if(!timerInterval) {
+            sendResponse({ status: "Resume Success" });
+            if (!timerInterval) {
                 timerInterval = setInterval(updateCountdown, 1000);
+                chrome.storage.local.set({ timerRunning: true });
             }
             break;
         case "reset":
-            sendResponse({status:"Reset Success"});
+            sendResponse({ status: "Reset Success" });
             resetTimer();
-            break;
-        case "switch":
-            sendResponse({status:"Break Success"});
-            switchTimer();
-            resetTimer();
-            timerInterval = setInterval(updateCountdown, 1000);
-            break;
-        case "music":
-            sendResponse({status:"Music toggled"});
-            // toggleMusic();
             break;
         case "popupOpened":
             popupstatus = true;
-            console.log(popupstatus);
-            sendResponse({status:"Popup Opened"})
+            sendResponse({ status: "Popup Opened" });
             break;
         case "popupClosed":
-            popupstatus = false;       
-            console.log(popupstatus); 
-            sendResponse({status:"Popup Closed"})
+            popupstatus = false;
+            sendResponse({ status: "Popup Closed" });
             break;
     }
 });
+
 
 // function toggleMusic() {
 //     const youtubeAudio = document.getElementById('youtubeAudio');
