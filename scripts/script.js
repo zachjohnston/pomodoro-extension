@@ -1,14 +1,25 @@
 const countdownEl = document.getElementById('countdown');
 var audio = new Audio(chrome.runtime.getURL("../audio/timer-sound.mp3"));
 
-// Check if the timer is already running
-chrome.storage.local.get(['timerRunning'], function(result) {
-    if (result.timerRunning) {
+// Check if the timer is already running or has ended
+chrome.storage.local.get(['timerRunning', 'timerState'], function(data) {
+    if (data.timerRunning) {
+        // Change UI if timer is running
         startButton.style.display = 'none';
-        resetButton.style.display = 'block';
         pauseButton.style.display = 'block';
+        resetButton.style.display = 'block';
+    }
 
-    
+    if (data.timerState === "endWork") {
+        audio.play();
+        switchButton.style.display = 'block';
+        switchButton.textContent = 'Start Break';
+        chrome.storage.local.remove('timerState'); // Clear the state
+    } else if (data.timerState === "endBreak") {
+        audio.play();
+        switchButton.style.display = 'block';
+        switchButton.textContent = 'Start Work';
+        chrome.storage.local.remove('timerState'); // Clear the state
     }
 });
 

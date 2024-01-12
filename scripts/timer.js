@@ -15,12 +15,10 @@ function updateCountdown() {
 
     if (time < 0) {
         clearInterval(timerInterval);
-        chrome.storage.local.set({ timerRunning: false });
-
-        if (startingMinutes === 1) {
-            chrome.runtime.sendMessage({ timer: "endWork" });
-        } else if (startingMinutes === 5) {
-            chrome.runtime.sendMessage({ timer: "endBreak" });
+        let timerState = startingMinutes === 1 ? "endWork" : "endBreak";
+        chrome.storage.local.set({ timerState: timerState, timerRunning: false });
+        if (popupstatus) {
+            chrome.runtime.sendMessage({ timer: timerState });
         }
     }
 }
