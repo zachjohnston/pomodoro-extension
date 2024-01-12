@@ -4,7 +4,10 @@ var audio = new Audio(chrome.runtime.getURL("../audio/timer-sound.mp3"));
 // Check if the timer is already running
 chrome.storage.local.get(['timerRunning'], function(result) {
     if (result.timerRunning) {
-        // change UI if timer running?
+        startButton.style.display = 'none';
+        resetButton.style.display = 'block';
+        pauseButton.style.display = 'block';
+
     
     }
 });
