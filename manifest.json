@@ -1,29 +1,29 @@
-{
-  "manifest_version": 3,
-  "name": "Pomodoro Timer",
-  "description": "Study timer that implements the Pomodoro study technique",
-  "version": "1.0",
-  "action": {
-    "default_popup": "popup/popup.html",
-    "default_icon": "images/icon.png"
-  },
-  "background": {
-    "service_worker": "scripts/timer.js"
-  },
-  "permissions": [
-    "storage",
-    "activeTab"
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["audio/timer-sound.mp3"],
-      "matches": ["<all_urls>"]
-    }
-  ],
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["scripts/script.js"]
-    }
-  ]
-}
+  {
+    "manifest_version": 3,
+    "name": "Pomodoro Timer",
+    "description": "Study timer that implements the Pomodoro study technique",
+    "version": "1.0",
+    "action": {
+      "default_popup": "popup/popup.html",
+      "default_icon": "images/icon.png"
+    },
+    "background": {
+      "service_worker": "scripts/timer.js"
+    },
+    "permissions": [
+      "storage",
+      "activeTab"
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["audio/timer-sound.mp3"],
+        "matches": ["<all_urls>"]
+      }
+    ],
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["scripts/cont.js"]
+      }
+    ]
+  }

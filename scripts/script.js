@@ -1,5 +1,5 @@
 const countdownEl = document.getElementById('countdown');
-var audio = new Audio(chrome.runtime.getURL("../audio/timer-sound.mp3"));
+let running = false;
 
 // Check if the timer is already running or has ended
 chrome.storage.local.get(['timerRunning', 'timerState'], function(data) {
@@ -10,15 +10,10 @@ chrome.storage.local.get(['timerRunning', 'timerState'], function(data) {
         resetButton.style.display = 'block';
     }
 
-    if (data.timerState === "endWork") {
-        audio.play();
+    if (data.timerState === "endWork" || data.timerState === "endBreak") {
+        //audio.play();
         switchButton.style.display = 'block';
-        switchButton.textContent = 'Start Break';
-        chrome.storage.local.remove('timerState'); // Clear the state
-    } else if (data.timerState === "endBreak") {
-        audio.play();
-        switchButton.style.display = 'block';
-        switchButton.textContent = 'Start Work';
+        switchButton.textContent = data.timerState === "endWork" ? 'Start Break' : 'Start Work';
         chrome.storage.local.remove('timerState'); // Clear the state
     }
 });
@@ -31,8 +26,6 @@ window.addEventListener('unload', function() {
     chrome.runtime.sendMessage({ command: "popupClosed" });
 });
 
-let running = false;
-
 document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('startButton');
     const pauseButton = document.getElementById('pauseButton');
@@ -43,12 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener that listens for end of work or break message
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message.timer === "endWork") {
-            audio.play();
+            //audio.play();
             switchButton.style.display = 'block';
             switchButton.textContent = 'Start Break';
         }
         else if (message.timer === "endBreak") {
-            audio.play();
+            //audio.play();
             switchButton.style.display = 'block';
             switchButton.textContent = 'Start Work';
         }
@@ -72,7 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(response.status);
             });
             pauseButton.textContent = 'Resume Timer';
-        } else {
+        } 
+        else {
             running = true;
             chrome.runtime.sendMessage({ command: "resume" }, function(response) {
                 console.log(response.status);
@@ -108,10 +102,9 @@ document.addEventListener('DOMContentLoaded', function() {
         chrome.runtime.sendMessage({ command: "music" }, function(response) {
             console.log(response.status);
         });
-    });
+    })
 });
 
-// Listener for timer updates
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.command === "update") {
         const minutes = message.minutes;

@@ -1,4 +1,6 @@
-let startingMinutes = 1;
+let workTime = 1/6;
+let breakTime = 5;
+let startingMinutes = workTime;
 let time = startingMinutes * 60;
 let timerInterval = null;
 let popupstatus = false;
@@ -13,13 +15,22 @@ function updateCountdown() {
         chrome.runtime.sendMessage({ command: "update", minutes: minutes, seconds: seconds });
     }
 
+    
     if (time < 0) {
         clearInterval(timerInterval);
-        let timerState = startingMinutes === 1 ? "endWork" : "endBreak";
-        chrome.storage.local.set({ timerState: timerState, timerRunning: false });
-        if (popupstatus) {
-            chrome.runtime.sendMessage({ timer: timerState });
-        }
+        if (time < 0) {
+            clearInterval(timerInterval);
+            let timerState = startingMinutes === workTime ? "endWork" : "endBreak";
+            chrome.storage.local.set({ timerRunning: false, timerState: timerState });
+            
+            chrome.runtime.sendMessage({ command: "playAudio" }, function(response) {
+                console.log(response.status);
+            });
+
+            if (popupstatus) {
+                chrome.runtime.sendMessage({ timer: timerState });
+            }
+        }  
     }
 }
 
@@ -30,6 +41,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 sendResponse({ status: "Start Success" });
                 timerInterval = setInterval(updateCountdown, 1000);
                 chrome.storage.local.set({ timerRunning: true });
+            }
+            else{
+                sendResponse({status:"Start Unsuccessful"});
             }
             break;
         case "pause":
@@ -48,6 +62,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         case "reset":
             sendResponse({ status: "Reset Success" });
             resetTimer();
+            break;
+        case "switch":
+            sendResponse({status:"Switching Timer"});
+            switchTimer();
+            timerInterval = setInterval(updateCountdown, 1000);
+            chrome.storage.local.set({timerRunning:true});
             break;
         case "popupOpened":
             popupstatus = true;
@@ -83,12 +103,12 @@ function resetTimer() {
 
 
 function switchTimer(){
-    if(startingMinutes == 1){
-        startingMinutes = 5;
-//        chrome.runtime.sendMessage({period:"break"})
+    if(startingMinutes == workTime){
+        startingMinutes = breakTime;
+        time = startingMinutes*60;
     }
-    else if(startingMinutes == 5){
-        startingMinutes = 25;
-//        chrome.runtime.sendMessage({period:"work"})
+    else if(startingMinutes == breakTime){
+        startingMinutes = workTime;
+        time = startingMinutes*60
     }
 };
