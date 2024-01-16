@@ -1,18 +1,23 @@
+<!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" href="popup.css" type="text/css"/> 
 </head>
 <body>
-    <p id="countdown"></p>
-    <button id="startButton" style="display:block">Start Timer</button>
-    <button id="pauseButton" style="display:none;">Pause Timer</button>
-    <button id="resetButton" style="display:none;">Reset Timer</button>
-    <button id="switchButton" style="display:none;"></button>
-    <button id="musicToggleButton">Toggle Lofi Music</button>
+    <div id="timer-controls">
+        <p id="countdown">25:00</p>
+        <button id="startButton">Start Timer</button>
+        <button id="pauseButton" style="display:none;">Pause Timer</button>
+        <button id="resetButton" style="display:none;">Reset Timer</button>
+        <button id="switchButton" style="display:none;">Start Break</button>
+    </div>
+    <div id="music-controls">
+        <button id="musicToggleButton">Toggle Lofi Music</button>
+    </div>
     <iframe id="youtubeAudio" src="https://www.youtube.com/embed/qlXoh54zock?autoplay=0&mute=1" style="display:none;"></iframe>
-<!-- any scripts below here are executed when the popup is opened -->
+
+    <!-- Scripts -->
     <script src="../scripts/script.js"></script>
-    <script src="../scripts/music.js"></script>
     <script src="popup.js"></script>
 </body>
 </html>
