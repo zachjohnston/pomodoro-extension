@@ -32,12 +32,12 @@ function updateCountdown() {
     }
 }
 
-function resetTimer() {
-    clearInterval(timerInterval);
-    timerInterval = null;
-    time = startingMinutes * 60;
-    updateCountdown();
-}
+//function resetTimer() {
+    //clearInterval(timerInterval);
+    //timerInterval = null;
+    //time = startingMinutes * 60;
+    //updateCountdown();
+//}
 
 function switchTimer(){
     if(startingMinutes === workTime){
@@ -73,10 +73,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 chrome.storage.local.set({ timerRunning: true });
             }
             break;
-        case "reset":
-            sendResponse({ status: "Reset Success" });
-            resetTimer();
-            break;
+        //case "reset":
+            //sendResponse({ status: "Reset Success" });
+            //resetTimer();
+            //break;
         case "switch":
             sendResponse({ status: "Switching Timer" });
             switchTimer();

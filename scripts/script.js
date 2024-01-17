@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('startButton');
     const pauseButton = document.getElementById('pauseButton');
-    const resetButton = document.getElementById('resetButton');
     const switchButton = document.getElementById('switchButton');
     const musicToggleButton = document.getElementById('musicToggleButton');
     const countdownEl = document.getElementById('countdown');
@@ -12,13 +11,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.timerRunning) {
             startButton.style.display = 'none';
             pauseButton.style.display = 'block';
-            resetButton.style.display = 'block';
+        } else {
+            startButton.style.display = (data.timerState !== "endWork") ? 'block' : 'none';
+            pauseButton.style.display = 'none';
         }
 
-        if (data.timerState === "endWork" || data.timerState === "endBreak") {
+        if (data.timerState === "endWork") {
             switchButton.style.display = 'block';
-            switchButton.textContent = data.timerState === "endWork" ? 'Start Break' : 'Start Work';
-            chrome.storage.local.remove('timerState');
+            switchButton.textContent = 'Start Break';
+        } else if (data.timerState === "endBreak") {
+            switchButton.style.display = 'none';
+        } else {
+            switchButton.style.display = 'none';
         }
     });
 
@@ -37,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
             running = true;
             startButton.style.display = 'none';
             pauseButton.style.display = 'block';
-            resetButton.style.display = 'block';
         });
     });
 
@@ -57,21 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
         running = !running;
     });
 
-    // Reset Timer
-    resetButton.addEventListener('click', function() {
-        chrome.runtime.sendMessage({ command: "reset" }, function(response) {
-            console.log(response.status);
-            startButton.style.display = 'block';
-            pauseButton.style.display = 'none';
-            resetButton.style.display = 'none';
-        });
-    });
-
-    // Switch Timer
+    // Switch Timer (Break)
     switchButton.addEventListener('click', function() {
         chrome.runtime.sendMessage({ command: "switch" }, function(response) {
             console.log(response.status);
-            // Update UI as needed
+            switchButton.style.display = 'none'; // Hide switch button once clicked
+            pauseButton.style.display = 'block'; // Show pause button during break
+            running = false; // Assuming break time is not considered 'running'
         });
     });
 
