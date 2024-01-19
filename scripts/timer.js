@@ -1,10 +1,10 @@
 let currentMusicTabId = null;
-let workTime = 1/6;
-let breakTime = 5;
+let workTime = 1 / 6; // 10 seconds for demonstration
+let breakTime = 1 / 12; // 5 seconds for demonstration
 let startingMinutes = workTime;
 let time = startingMinutes * 60;
 let timerInterval = null;
-let popupstatus = false;
+let popupStatus = false;
 
 function updateCountdown() {
     const minutes = Math.floor(time / 60);
@@ -12,93 +12,56 @@ function updateCountdown() {
     seconds = seconds < 10 ? '0' + seconds : seconds;
     time--;
 
-    if (popupstatus) {
+    if (popupStatus) {
         chrome.runtime.sendMessage({ command: "update", minutes: minutes, seconds: seconds });
     }
 
     if (time < 0) {
         clearInterval(timerInterval);
-        let timerState = startingMinutes === workTime ? "endWork" : "endBreak";
-        chrome.storage.local.set({ timerRunning: false, timerState: timerState });
-        
-        chrome.runtime.sendMessage({ command: "playAudio" }, function(response) {
-            console.log(response.status);
-        });
+        startingMinutes = (startingMinutes === workTime) ? breakTime : workTime;
+        time = startingMinutes * 60;
+        timerInterval = setInterval(updateCountdown, 1000);
 
-        if (popupstatus) {
-            chrome.runtime.sendMessage({ timer: timerState });
-        }
-        resetTimer(); // Reset timer after it ends
+        let timerState = startingMinutes === workTime ? "work" : "break";
+        chrome.storage.local.set({ timerRunning: true, timerState: timerState });
+        chrome.runtime.sendMessage({ command: "sessionChanged", timerState: timerState });
     }
 }
-
-//function resetTimer() {
-    //clearInterval(timerInterval);
-    //timerInterval = null;
-    //time = startingMinutes * 60;
-    //updateCountdown();
-//}
-
-function switchTimer(){
-    if(startingMinutes === workTime){
-        startingMinutes = breakTime;
-    } else if(startingMinutes === breakTime){
-        startingMinutes = workTime;
-    }
+function resetTimer(){
+    clearInterval(timerInterval);
+    timerInterval = null;
+    startingMinutes = workTime;
     time = startingMinutes * 60;
-    updateCountdown();
+    popupStatus = false;
+    chrome.storage.local.set({ timerRunning: false, timerState: "work"});
 }
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.command) {
         case "start":
             if (!timerInterval) {
-                sendResponse({ status: "Start Success" });
                 timerInterval = setInterval(updateCountdown, 1000);
-                chrome.storage.local.set({ timerRunning: true });
-            } else {
-                sendResponse({ status: "Start Unsuccessful" });
+                chrome.storage.local.set({ timerRunning: true, timerState: "work" });
             }
             break;
         case "pause":
-            sendResponse({ status: "Pause Success" });
             clearInterval(timerInterval);
             timerInterval = null;
             chrome.storage.local.set({ timerRunning: false });
             break;
         case "resume":
-            sendResponse({ status: "Resume Success" });
             if (!timerInterval) {
                 timerInterval = setInterval(updateCountdown, 1000);
                 chrome.storage.local.set({ timerRunning: true });
             }
             break;
-        //case "reset":
-            //sendResponse({ status: "Reset Success" });
-            //resetTimer();
-            //break;
-        case "switch":
-            sendResponse({ status: "Switching Timer" });
-            switchTimer();
-            if (!timerInterval) {
-                timerInterval = setInterval(updateCountdown, 1000);
-            }
-            chrome.storage.local.set({ timerRunning: true });
+        case "endSession":
+            resetTimer();
             break;
         case "popupOpened":
-            popupstatus = true;
-            sendResponse({ status: "Popup Opened" });
+            popupStatus = true;
             break;
         case "popupClosed":
-            popupstatus = false;
-            sendResponse({ status: "Popup Closed" });
-            break;
-        case "toggleMusic":
-            if (currentMusicTabId !== null && currentMusicTabId !== sender.tab.id) {
-                pauseMusicInTab(currentMusicTabId);
-            }
-            currentMusicTabId = sender.tab.id;
-            sendResponse({ status: "Music toggled" });
+            popupStatus = false;
             break;
     }
 });
