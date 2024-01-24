@@ -18,23 +18,31 @@ function updateCountdown() {
 
     if (time < 0) {
         clearInterval(timerInterval);
-        startingMinutes = (startingMinutes === workTime) ? breakTime : workTime;
+        let isWorkTime = startingMinutes === workTime;
+        startingMinutes = isWorkTime ? breakTime : workTime;
         time = startingMinutes * 60;
         timerInterval = setInterval(updateCountdown, 1000);
 
-        let timerState = startingMinutes === workTime ? "work" : "break";
+        let timerState = isWorkTime ? "break" : "work";
         chrome.storage.local.set({ timerRunning: true, timerState: timerState });
         chrome.runtime.sendMessage({ command: "sessionChanged", timerState: timerState });
+
+        // Send additional message when break starts
+        if (timerState === "break") {
+            chrome.runtime.sendMessage({ command: "breakStarted" });
+        }
     }
 }
-function resetTimer(){
+
+function resetTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
     startingMinutes = workTime;
     time = startingMinutes * 60;
     popupStatus = false;
-    chrome.storage.local.set({ timerRunning: false, timerState: "work"});
+    chrome.storage.local.set({ timerRunning: false, timerState: "work" });
 }
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.command) {
         case "start":
@@ -46,7 +54,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         case "pause":
             clearInterval(timerInterval);
             timerInterval = null;
-            chrome.storage.local.set({ timerRunning: false });
+            let currentState = startingMinutes === workTime ? "work" : "break";
+            chrome.storage.local.set({ timerRunning: false, timerState: currentState });
             break;
         case "resume":
             if (!timerInterval) {
