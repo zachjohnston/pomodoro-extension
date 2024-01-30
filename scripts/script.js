@@ -4,13 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const pauseBreakButton = document.getElementById('pauseBreakButton');
     const endSessionButton = document.getElementById('endSessionButton');
     const countdownEl = document.getElementById('countdown');
+    let initialStart = true;
 
     // Function to update UI based on timer state and session
     function updateUI(timerRunning, timerState) {
-        startButton.style.display = timerRunning ? 'none' : 'block';
-        endSessionButton.style.display = timerRunning ? 'block' : 'none';
-
         if (timerRunning) {
+            startButton.style.display = 'none';
+            endSessionButton.style.display = 'block';
+
             if (timerState === 'work') {
                 pauseButton.style.display = 'block';
                 pauseBreakButton.style.display = 'none';
@@ -21,7 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             pauseButton.style.display = 'none';
             pauseBreakButton.style.display = 'none';
-            startButton.textContent = timerState === 'work' ? 'Start Timer' : 'Start Break';
+            startButton.style.display = 'block';
+            endSessionButton.style.display = 'none';
+
+            if (initialStart) {
+                startButton.textContent = 'Start Timer';
+            } else {
+                startButton.textContent = timerState === 'work' ? 'Resume Timer' : 'Resume Break';
+            }
         }
     }
 
@@ -42,7 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Start Timer or Resume Break
     startButton.addEventListener('click', function() {
         chrome.runtime.sendMessage({ command: "start" });
-        updateUI(true, 'work');
+        let currentState = initialStart ? 'work' : (pauseButton.style.display === 'none' ? 'break' : 'work');
+        updateUI(true, currentState);
+        initialStart = false;
     });
 
     // Pause Timer or Break
@@ -61,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chrome.runtime.sendMessage({ command: "endSession" });
         updateUI(false, 'work');
         countdownEl.textContent = '25:00';
+        initialStart = true;
     });
 
     // When popup opens
