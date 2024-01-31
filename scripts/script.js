@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const pauseBreakButton = document.getElementById('pauseBreakButton');
     const endSessionButton = document.getElementById('endSessionButton');
     const countdownEl = document.getElementById('countdown');
-    const progressCircle = document.getElementById('progress-circle'); // Assuming you have this element in your HTML
     let initialStart = true;
 
     // Function to update UI based on timer state and session
@@ -45,11 +44,6 @@ document.addEventListener('DOMContentLoaded', function() {
             countdownEl.textContent = `${message.minutes}:${message.seconds}`;
         } else if (message.command === "sessionChanged") {
             updateUI(true, message.timerState);
-        } else if (message.command === "updateProgress") {
-            // Update the progress circle based on the received progress
-            if (progressCircle) {
-                progressCircle.style.background = `conic-gradient(#4CAF50 ${message.progress}%, transparent ${message.progress}%, transparent 100%)`;
-            }
         }
     });
 

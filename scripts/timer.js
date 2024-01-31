@@ -17,7 +17,7 @@ function updateCountdown() {
     }
 
     if (time < 0) {
-        clearInterval(timerInterval); 
+        clearInterval(timerInterval);
         let isWorkTime = startingMinutes === workTime;
         startingMinutes = isWorkTime ? breakTime : workTime;
         time = startingMinutes * 60;

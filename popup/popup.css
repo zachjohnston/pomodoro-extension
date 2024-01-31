@@ -1,56 +1,34 @@
+
 html, body {
-  width: 100%; /* Adjusted to full width */
-  height: 100%; /* Adjusted to full height */
-  margin: 0; /* Remove default margin */
-  padding: 0; /* Remove default padding */
+    width: 300px; 
+    height: 400px; 
+  }
+  
+
+  body {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Papyrus'; /* Apply font family globally */
-}
+  p {
+    font-family: 'Papyrus'; 
+    font-size: 50px; 
+  }
+  button {
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    font-family: 'Papyrus';
+    color: white;
+  }
+  button:hover {
+    background-color: #45a049;
 
-#circle-container {
-  position: relative;
-  width: 200px; /* Diameter of the circle */
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#progress-circle {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: conic-gradient(#4CAF50 0%, #4CAF50 0%, transparent 0%, transparent 100%);
-  /* Start with an empty circle using the same green as the buttons */
-  transition: background 1s linear; /* Smooth transition for the fill */
-}
-
-#countdown {
-  font-size: 50px; /* Keep your large font size for visibility */
-  z-index: 1; /* Ensure the text appears above the progress circle */
-  position: relative; /* Ensure proper stacking */
-}
-
-button {
-  font-size: 20px;
-  padding: 10px 20px;
-  margin-top: 20px;
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-  background-color: #4CAF50; /* Your green color */
-  color: white;
-}
-
-button:hover {
-  background-color: #45a049; /* Slightly darker green on hover */
-}
+  }
+  
