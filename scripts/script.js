@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const countdownEl = document.getElementById('countdown');
     let initialStart = true;
 
-    // Function to update UI based on timer state and session
     function updateUI(timerRunning, timerState) {
         if (timerRunning) {
             startButton.style.display = 'none';
@@ -15,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (timerState === 'work') {
                 pauseButton.style.display = 'block';
                 pauseBreakButton.style.display = 'none';
-            } else { // timerState is 'break'
+            } else {
                 pauseButton.style.display = 'none';
                 pauseBreakButton.style.display = 'block';
             }
@@ -25,37 +24,33 @@ document.addEventListener('DOMContentLoaded', function() {
             startButton.style.display = 'block';
             endSessionButton.style.display = 'none';
 
-            if (initialStart) {
-                startButton.textContent = 'Start Timer';
-            } else {
-                startButton.textContent = timerState === 'work' ? 'Resume Timer' : 'Resume Break';
-            }
+            startButton.textContent = initialStart ? 'Start Timer' : 
+                (timerState === 'work' ? 'Resume Timer' : 'Resume Break');
         }
     }
 
-    // Check the current state of the timer and update UI
     chrome.storage.local.get(['timerRunning', 'timerState'], function(data) {
         updateUI(data.timerRunning, data.timerState || 'work');
     });
 
-    // Update Countdown Display and UI based on messages from background
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message.command === "update") {
             countdownEl.textContent = `${message.minutes}:${message.seconds}`;
         } else if (message.command === "sessionChanged") {
             updateUI(true, message.timerState);
+        } else if (message.command === "sessionEnded") {
+            initialStart = true;
+            updateUI(false, 'work');
+            countdownEl.textContent = '25:00';
         }
     });
 
-    // Start Timer or Resume Break
     startButton.addEventListener('click', function() {
         chrome.runtime.sendMessage({ command: "start" });
-        let currentState = initialStart ? 'work' : (pauseButton.style.display === 'none' ? 'break' : 'work');
-        updateUI(true, currentState);
+        updateUI(true, initialStart ? 'work' : (pauseButton.style.display === 'none' ? 'break' : 'work'));
         initialStart = false;
     });
 
-    // Pause Timer or Break
     pauseButton.addEventListener('click', function() {
         chrome.runtime.sendMessage({ command: "pause" });
         updateUI(false, 'work');
@@ -66,18 +61,12 @@ document.addEventListener('DOMContentLoaded', function() {
         updateUI(false, 'break');
     });
 
-    // End Session
     endSessionButton.addEventListener('click', function() {
         chrome.runtime.sendMessage({ command: "endSession" });
-        updateUI(false, 'work');
-        countdownEl.textContent = '25:00';
-        initialStart = true;
     });
 
-    // When popup opens
     chrome.runtime.sendMessage({ command: "popupOpened" });
 
-    // When popup closes
     window.addEventListener('unload', function() {
         chrome.runtime.sendMessage({ command: "popupClosed" });
     });

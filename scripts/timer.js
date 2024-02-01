@@ -41,6 +41,9 @@ function resetTimer() {
     time = startingMinutes * 60;
     popupStatus = false;
     chrome.storage.local.set({ timerRunning: false, timerState: "work" });
+
+    // Send a message indicating the session has ended
+    chrome.runtime.sendMessage({ command: "sessionEnded" });
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
