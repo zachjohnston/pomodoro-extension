@@ -5,6 +5,8 @@ let startingMinutes = workTime;
 let time = startingMinutes * 60;
 let timerInterval = null;
 let popupStatus = false;
+let completedCycles = 0;
+let inWorkSession = true;
 
 function updateCountdown() {
     const minutes = Math.floor(time / 60);
@@ -19,6 +21,14 @@ function updateCountdown() {
     if (time < 0) {
         clearInterval(timerInterval);
         let isWorkTime = startingMinutes === workTime;
+
+        // Check if a break session has ended
+        if (!isWorkTime) {
+            completedCycles++;
+            if (completedCycles > 4) completedCycles = 1; // Reset after 4 cycles
+            chrome.runtime.sendMessage({ command: "updateProgressBar", completedCycles: completedCycles });
+        }
+
         startingMinutes = isWorkTime ? breakTime : workTime;
         time = startingMinutes * 60;
         timerInterval = setInterval(updateCountdown, 1000);
@@ -40,10 +50,9 @@ function resetTimer() {
     startingMinutes = workTime;
     time = startingMinutes * 60;
     popupStatus = false;
+    completedCycles = 0;
     chrome.storage.local.set({ timerRunning: false, timerState: "work" });
-
-    // Send a message indicating the session has ended
-    chrome.runtime.sendMessage({ command: "sessionEnded" });
+    chrome.runtime.sendMessage({ command: "resetProgressBar" });
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

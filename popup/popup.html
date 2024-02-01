@@ -4,6 +4,14 @@
     <link rel="stylesheet" href="popup.css" type="text/css"/> 
 </head>
 <body>
+    <div id="canvasContainer">
+        <div id="progressBar">
+            <div class="progressBox" id="box1"></div>
+            <div class="progressBox" id="box2"></div>
+            <div class="progressBox" id="box3"></div>
+            <div class="progressBox" id="box4"></div>
+        </div>
+    </div>
     <div id="timer-controls">
         <p id="countdown">25:00</p>
         <button id="startButton">Start Timer</button>
@@ -18,6 +26,7 @@
         <button id="musicToggleButton">Toggle Lofi Music</button>
     </div>
     <iframe id="youtubeAudio" src="https://www.youtube.com/embed/qlXoh54zock?autoplay=0&mute=1" style="display:none;"></iframe>
+    <audio id="timerSound" src="path/to/your/timer-sound.mp3" type="audio/mp3"></audio>
 
     <!-- Scripts -->
     <script src="../scripts/script.js"></script>

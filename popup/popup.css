@@ -31,4 +31,24 @@ html, body {
     background-color: #45a049;
 
   }
-  
+/* Progress Bar Container */
+#canvasContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+}
+
+/* Progress Box within the Bar */
+.progressBox {
+  width: 20px;
+  height: 20px;
+  border: 1px solid gray;
+  background-color: white;
+  margin-left: 2px;
+}
+
+/* Style for a completed session box */
+.progressBox.glow {
+  background-color: green;
+}

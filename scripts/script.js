@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const pauseBreakButton = document.getElementById('pauseBreakButton');
     const endSessionButton = document.getElementById('endSessionButton');
     const countdownEl = document.getElementById('countdown');
+    const musicToggleButton = document.getElementById('musicToggleButton');
+    const youtubeAudio = document.getElementById('youtubeAudio');
     let initialStart = true;
 
     function updateUI(timerRunning, timerState) {
@@ -29,6 +31,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function updateProgressBar(completedCycles) {
+        for (let i = 1; i <= 4; i++) {
+            const box = document.getElementById('box' + i);
+            if (i <= completedCycles) {
+                box.classList.add('glow');
+            } else {
+                box.classList.remove('glow');
+            }
+        }
+    }
+
     chrome.storage.local.get(['timerRunning', 'timerState'], function(data) {
         updateUI(data.timerRunning, data.timerState || 'work');
     });
@@ -42,6 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
             initialStart = true;
             updateUI(false, 'work');
             countdownEl.textContent = '25:00';
+            updateProgressBar(0); // Reset progress bar on session end
+        } else if (message.command === "updateProgressBar") {
+            updateProgressBar(message.completedCycles);
         }
     });
 
@@ -63,6 +79,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     endSessionButton.addEventListener('click', function() {
         chrome.runtime.sendMessage({ command: "endSession" });
+    });
+
+    musicToggleButton.addEventListener('click', function() {
+        if (youtubeAudio.style.display === 'none' || youtubeAudio.style.display === '') {
+            youtubeAudio.style.display = 'block';
+        } else {
+            youtubeAudio.style.display = 'none';
+        }
     });
 
     chrome.runtime.sendMessage({ command: "popupOpened" });
