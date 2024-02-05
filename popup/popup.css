@@ -2,6 +2,7 @@
 html, body {
     width: 300px; 
     height: 400px; 
+    background-color: #393957;
   }
   
 
@@ -10,10 +11,12 @@ html, body {
     flex-direction: column; 
     justify-content: center;
     align-items: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
   p {
-    font-family: 'Papyrus'; 
+    font-family: 'Helvetica'; 
     font-size: 50px; 
   }
   button {
@@ -23,20 +26,31 @@ html, body {
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    background-color: #4CAF50;
-    font-family: 'Papyrus';
-    color: white;
+    background-color: #a04caf;
+    font-family: 'Helvetica';
+    color: rgb(255, 255, 255);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   }
   button:hover {
     background-color: #45a049;
 
   }
+
+  /* Adjustments for #progressBar to align children horizontally */
+#progressBar {
+  display: flex; /* This will align the .progressBox children horizontally */
+  justify-content: center; /* This will center the boxes horizontally */
+  align-items: center; /* This will center the boxes vertically if needed */
+}
+
 /* Progress Bar Container */
 #canvasContainer {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 5px;
+  left: 35%;
   display: flex;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+
 }
 
 /* Progress Box within the Bar */
