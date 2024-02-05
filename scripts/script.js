@@ -48,7 +48,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message.command === "update") {
-            countdownEl.textContent = `${message.minutes}:${message.seconds}`;
+            if (message.minutes <= 9){
+                countdownEl.textContent = `0${message.minutes}:${message.seconds}`;    
+            }
+            else{
+                countdownEl.textContent = `${message.minutes}:${message.seconds}`;
+            }
         } else if (message.command === "sessionChanged") {
             updateUI(true, message.timerState);
         } else if (message.command === "sessionEnded") {
@@ -79,6 +84,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     endSessionButton.addEventListener('click', function() {
         chrome.runtime.sendMessage({ command: "endSession" });
+        pauseButton.style.display = 'none';
+        pauseBreakButton.style.display = 'none';
+        startButton.style.display = 'block';
+        endSessionButton.style.display = 'none';
     });
 
     musicToggleButton.addEventListener('click', function() {

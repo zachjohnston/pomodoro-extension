@@ -49,7 +49,7 @@ function resetTimer() {
     timerInterval = null;
     startingMinutes = workTime;
     time = startingMinutes * 60;
-    popupStatus = false;
+    //popupStatus = false;
     completedCycles = 0;
     chrome.storage.local.set({ timerRunning: false, timerState: "work" });
     chrome.runtime.sendMessage({ command: "resetProgressBar" });
@@ -76,6 +76,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             }
             break;
         case "endSession":
+            chrome.runtime.sendMessage({command:"sessionEnded"});
             resetTimer();
             break;
         case "popupOpened":

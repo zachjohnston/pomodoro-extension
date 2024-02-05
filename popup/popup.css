@@ -36,6 +36,7 @@ html, body {
 
   }
 
+
   /* Adjustments for #progressBar to align children horizontally */
 #progressBar {
   display: flex; /* This will align the .progressBox children horizontally */
