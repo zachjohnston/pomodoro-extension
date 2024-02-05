@@ -1,6 +1,6 @@
 let currentMusicTabId = null;
-let workTime = 1 / 6; // 10 seconds for demonstration
-let breakTime = 1 / 12; // 5 seconds for demonstration
+let workTime = 25; // Change this value to set the minutes you want your WORK period to be. 
+let breakTime = 5; // Change this value to set the minutes you want your BREAK period to be. 
 let startingMinutes = workTime;
 let time = startingMinutes * 60;
 let timerInterval = null;
